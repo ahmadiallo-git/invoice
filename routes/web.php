@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,20 +14,17 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
+use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 
-Auth::routes();
-
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
-
-Route::prefix('admin')->group(function () {
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-});
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -38,4 +33,13 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::prefix('products')->group( function (){
+        Route::get('/', [ProductController::class,'index'])->name('products');
+        Route::get('/create-products', [ProductController::class,'create'])->name('creat.products');
+    });
+    Route::prefix('category')->group(function (){
+        Route::get('/', [CategoryController::class,'index'])->name('category.index');
+        Route::get('/create', [CategoryController::class,'create'])->name('category.create');
+        Route::post('/store', [CategoryController::class, 'store'])->name('category.store');
+    });
 });
