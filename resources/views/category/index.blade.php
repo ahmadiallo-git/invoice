@@ -4,18 +4,8 @@
             {{ __('Nouveau produits') }}
         </h2>
     </x-slot>
+   @livewire('category.index')
+  
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Category</h3>
-                        <a href="{{ route("category.create") }}" class="btn btn-primary">Nouveau</a>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  
 </x-app-layout>
