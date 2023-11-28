@@ -17,11 +17,11 @@ return new class extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('name');
             $table->string('slug')->nullable();
- 
             $table->text('description')->nullable();
             $table->string('unit_price');
             $table->string('selling_price');
             $table->integer('quantity');
+            $table->integer('alert_stock')->default('100');
             $table->tinyInteger('status')->default('0')->comment('1=hidden,0=visible');
             $table->timestamps();
         });

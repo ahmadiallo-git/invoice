@@ -14,9 +14,11 @@
 |
 */
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -58,11 +60,19 @@ Route::middleware([
         Route::get('/create', [ProductController::class,'create'])->name('product.create');
         Route::post('/store', [ProductController::class, 'store'])->name('product.store');
         Route::get('/product/cancel', [ProductController::class, 'cancel'])->name('product.cancel');
-        Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('category.edit');
-        Route::delete('/product/{category}', [ProductController::class, 'destroy'])->name('product.destroy');
-        Route::put('/product/{category}', [ProductController::class, 'update'])->name('product.update');
-
-
-
+        Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
+        Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
+        Route::put('/product/{product}', [ProductController::class, 'update'])->name('product.update');
     });
+
+     //Cart Routes
+     Route::prefix('carts')->group(function (){
+       Route::post('/', [CartController::class, 'store'])->name('cart.store');
+    });
+    Route::prefix('orders')->group(function ()
+    {
+        Route::get('/', [OrderController::class,'index'])->name('oders.index');
+        Route::get('/store', [OrderController::class, 'store'])->name('orders.store');
+    });
+
 });
