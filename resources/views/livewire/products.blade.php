@@ -23,32 +23,28 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-300">
-                                @foreach($products as $product)
+                                @forelse($products as $product)
                                     <tr>
                                         <td class="px-6 py-4 whitespace-no-wrap">{{ $product->id }}</td>
                                         <td class="px-6 py-4 whitespace-no-wrap">{{ $product->name }}</td>
                                         <td class="px-6 py-4 whitespace-no-wrap">{{ $product->slug }}</td>
                                         <td class="px-6 py-4 whitespace-no-wrap">
-                                            <a href="{{ route('product.edit', $product->id) }}" class="text-blue-500 hover:text-blue-700">Edit</a>
+                                         <a href="{{ route('product.edit', $product->id) }}" class="text-blue-500 hover:text-blue-700">Edit</a>
+                                        <button wire:click.prevent="addToCart({{ $product->id }})" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 rounded btn btn-sm btn-primary">Add to Cart
+                                        </button>   
+                                            
                                            
-                                            @if ($cart->where('id', $product->id)->count())
-                                                In cart
-                                            @else
-                                            <form wire:submit.prevent="addToCart({{ $product->id }})" action="{{ route('cart.store', $product->id) }}" method="POST" class="inline">
-                                                @csrf
-                
-                                                <input wire:model="quantity.{{ $product->id }}" type="number" class="text-sm sm:text-base px-2 pr-2 rounded-lg border-gray-400" style="width: 50px"/>
-                                                <button type="submit" class="bg-blue-500 text-white hover:bg-blue-700 ml-2">Ajouter</button>
-                                            </form>
-                                            @endif                                            
+                                                                                      
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty 
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap border-b"></td>
+                                </tr>
+                                @endforelse
                             </tbody>
                             
                         </table>
-                        
-                        
                     </div>
                 </div>
             </div>

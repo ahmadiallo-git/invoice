@@ -13,15 +13,10 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->string('number')->unique();
-            $table->integer('customer_id')->unique()->unsigned();
-            $table->date('date');
-            $table->date('due_date');
-            $table->string('reference')->nullable();
-            $table->text('terms_and_conditions');
-            $table->double('sub_total');
-            $table->double('discount')->default(0);
-            $table->double('total');
+            $table->unsignedBigInteger('user_id');
+            $table->integer('total_quantity');
+            $table->decimal('discount', 10, 0)->nullable()->default(0);
+            $table->decimal('total_amount', 8, 2);
             $table->timestamps();
         });
     }

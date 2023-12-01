@@ -4,8 +4,11 @@ namespace App\Livewire;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
-use Gloudemans\Shoppingcart\Facades\Cart;
+use App\Models\Cart ;
+// use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Component;
+use Mpociot\VatCalculator\VatCalculator;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class ProductTable extends Component
 {
@@ -32,8 +35,42 @@ class ProductTable extends Component
     public function render()
     {
        
-        $cart = Cart::content();
+        // $cart = Cart::content();
+        $cartItems = Cart::where('user_id', auth()->id())->with('products')->get()->map(function (Cart $items){
+            return (Object) [
+                'id'=> $items->product_id,
+                'name'=> $items->products->name,
+                'price'=> $items->products->price,
+                'qty' => $items->products->qty,
+                'total'=> ($items->qty * $items->products->price) 
+            ];
+        });
+        $this->totalCartWithoutTax = $cartItems->sum('total') + $this->shipping;
+        // $this->totalWithTax = round((VatCalculator::calculate($this->totalCartWithoutTax)));
+        // $this->taxRate = VatCalculator::getTaxRate();
+        // $this->taxValue = round(VatCalculator::getTaxValue(), 2);
+
+
         return view('livewire.product-table', compact('cart'));
+    }
+
+    public function increaseQuantity($id){
+
+    $this->checkout_message = '';
+
+    $this->emit('increaseQuantity', $id);
+    }
+
+    public function decreaseQuantity($id, $qty){
+        $this->checkout_message = '';
+        if($qty !=1){
+            Cart::where('product_id', $id)->update(['qty' => $qty - 1]);
+        }else{
+            Cart::where('product_id', $id)-> delete();
+        }
+
+        $this->emit('updateCart');
+
     }
 
     public function addToCart($product_id) {

@@ -18,6 +18,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
@@ -74,5 +75,9 @@ Route::middleware([
         Route::get('/', [OrderController::class,'index'])->name('oders.index');
         Route::get('/store', [OrderController::class, 'store'])->name('orders.store');
     });
+
+    Route::get('/cart', [InvoiceController::class, 'cart']);
+    Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoice.show');
+    
 
 });

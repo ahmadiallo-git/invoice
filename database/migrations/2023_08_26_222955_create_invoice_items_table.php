@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invoice_items', function (Blueprint $table) {
-            $table->id();
-            $table->integer('invoice_id');
-            $table->integer('product_id');
-            $table->double('unit_price');
-            $table->integer('quantity');
-            $table->timestamps();
-        });
+            Schema::create('invoice_items', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('invoice_id');
+                $table->unsignedBigInteger('product_id');
+                $table->integer('quantity');
+                $table->decimal('amount', 8, 2);
+                $table->timestamps();
+            });
     }
 
     /**

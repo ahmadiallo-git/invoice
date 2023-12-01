@@ -1,22 +1,26 @@
 <?php
 
-
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Invoice extends Model
 {
     protected $table = 'invoices';
-    protected $primaryKey = 'id';
-    public $timestamps = true; // Si vous ne stockez pas de colonnes de timestamps (created_at et updated_at).
+    
+    use HasFactory;
 
     protected $fillable = [
-        'customerName',
-        'createdAt',
-        'customerNumber',
+        'user_id',
+        'total_quantity',
+        'total_amount',
     ];
 
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
     public function invoiceItems()
     {
         return $this->hasMany(InvoiceItem::class);
@@ -31,12 +35,32 @@ class Invoice extends Model
         return $subtotal;
     }
 
-    public function getTotal()
+    public function getTotal(): float
     {
         $total = 0;
-        foreach ($this->invoiceItems as $invoiceItem) {
-            $total += $invoiceItem->getSubtotal();
+    
+        
+        $total = $this->invoiceItems->sum->getSubtotal();
+
+    
+        // Soustraire la réduction totale
+        if ($this->discount !== null) {
+            $total -= $this->discount;
         }
+    
         return $total;
     }
+
+    public function getDiscount(): ?string
+    {
+        return $this->discount;
+    }
+
+    public function setDiscount(string $discount): static
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+   
 }
